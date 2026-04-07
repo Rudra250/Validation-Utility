@@ -6,7 +6,6 @@ tags:
 - 'v*'
 
 jobs:
-
 build:
 runs-on: ${{ matrix.os }}
 
@@ -19,6 +18,7 @@ steps:
   - uses: actions/checkout@v4
 
   - name: Extract version
+    shell: bash
     run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
   - name: Setup Python
@@ -36,7 +36,7 @@ steps:
       python -m nuitka main.py ^
       --standalone ^
       --onefile ^
-      --output-filename=ValidationUtility-${{ env.VERSION }}.exe ^
+      --output-filename=ValidationUtility-%VERSION%.exe ^
       --windows-icon-from-ico=ValidationUtility.ico
 
   - name: Debug files (Windows)
@@ -56,8 +56,7 @@ steps:
     uses: actions/upload-artifact@v4
     with:
       name: windows-installer
-      path: Output/ValidationUtility-Setup-${{ env.VERSION }}.exe
-
+      path: Output\ValidationUtility-Setup-%VERSION%.exe
 
   # ---------------- macOS ----------------
   - name: Build macOS App
@@ -69,8 +68,7 @@ steps:
 
   - name: Rename macOS App
     if: runner.os == 'macOS'
-    run: |
-      mv main.app ValidationUtility-${{ env.VERSION }}.app
+    run: mv main.app ValidationUtility-${{ env.VERSION }}.app
 
   - name: Debug files (macOS)
     if: runner.os == 'macOS'
