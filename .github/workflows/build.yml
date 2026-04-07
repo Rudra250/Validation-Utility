@@ -1,4 +1,4 @@
-name: Build & Release ValidationUtility
+name: Build and Release
 
 on:
 push:
@@ -6,18 +6,15 @@ tags:
 - 'v*'
 
 jobs:
-build:
-runs-on: ${{ matrix.os }}
+build-windows:
+runs-on: windows-latest
 
 ```
-strategy:
-  matrix:
-    os: [windows-latest, macos-latest]
-
 steps:
-  - uses: actions/checkout@v4
+  - name: Checkout
+    uses: actions/checkout@v4
 
-  - name: Extract version
+  - name: Set version
     shell: bash
     run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
@@ -29,9 +26,7 @@ steps:
   - name: Install Nuitka
     run: pip install nuitka
 
-  # ---------------- WINDOWS ----------------
   - name: Build EXE
-    if: runner.os == 'Windows'
     run: |
       python -m nuitka main.py ^
       --standalone ^
@@ -39,51 +34,57 @@ steps:
       --output-filename=ValidationUtility-%VERSION%.exe ^
       --windows-icon-from-ico=ValidationUtility.ico
 
-  - name: Debug files (Windows)
-    if: runner.os == 'Windows'
-    run: dir
-
   - name: Install Inno Setup
-    if: runner.os == 'Windows'
     run: choco install innosetup -y
 
   - name: Build Installer
-    if: runner.os == 'Windows'
     run: ISCC.exe validation_utility_installer.iss
 
-  - name: Upload Windows Installer
-    if: runner.os == 'Windows'
+  - name: Upload Installer
     uses: actions/upload-artifact@v4
     with:
       name: windows-installer
-      path: Output\ValidationUtility-Setup-%VERSION%.exe
+      path: Output\*.exe
+```
 
-  # ---------------- macOS ----------------
+build-macos:
+runs-on: macos-latest
+
+```
+steps:
+  - name: Checkout
+    uses: actions/checkout@v4
+
+  - name: Set version
+    shell: bash
+    run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+  - name: Setup Python
+    uses: actions/setup-python@v5
+    with:
+      python-version: '3.11'
+
+  - name: Install Nuitka
+    run: pip install nuitka
+
   - name: Build macOS App
-    if: runner.os == 'macOS'
     run: |
       python -m nuitka main.py \
       --standalone \
       --macos-create-app-bundle
 
-  - name: Rename macOS App
-    if: runner.os == 'macOS'
-    run: mv main.app ValidationUtility-${{ env.VERSION }}.app
-
-  - name: Debug files (macOS)
-    if: runner.os == 'macOS'
-    run: ls
+  - name: Rename App
+    run: mv main.app ValidationUtility-$VERSION.app
 
   - name: Upload macOS App
-    if: runner.os == 'macOS'
     uses: actions/upload-artifact@v4
     with:
       name: macos-app
-      path: ValidationUtility-${{ env.VERSION }}.app
+      path: ValidationUtility-*.app
 ```
 
 release:
-needs: build
+needs: [build-windows, build-macos]
 runs-on: ubuntu-latest
 
 ```
@@ -95,8 +96,8 @@ steps:
     uses: softprops/action-gh-release@v2
     with:
       files: |
-        windows-installer/ValidationUtility-Setup-*.exe
-        macos-app/ValidationUtility-*.app
+        windows-installer/*.exe
+        macos-app/*.app
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
