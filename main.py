@@ -1,4 +1,6 @@
+import os
 import sys
+import csv
 from PySide6.QtWidgets import (
     QApplication, QWidget, QLabel, QPushButton,
     QVBoxLayout, QHBoxLayout, QFileDialog,
@@ -6,10 +8,19 @@ from PySide6.QtWidgets import (
     QRadioButton, QButtonGroup, QMessageBox, QHeaderView, QMenu, QComboBox,
     QDialog, QTextEdit
 )
-import csv
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon
 from governance_controller import run_governance, detect_spec_type
+
+
+def resolve_path(relative_path):
+    """ Get absolute path to resource, works for dev and for Nuitka/PyInstaller """
+    try:
+        # Nuitka/PyInstaller and regular execution
+        base_path = os.path.dirname(os.path.abspath(__file__))
+        return os.path.join(base_path, relative_path)
+    except Exception:
+        return relative_path
 
 
 class SummaryDialog(QDialog):
@@ -71,7 +82,7 @@ class UnifiedGovernanceApp(QWidget):
         super().__init__()
 
         self.setWindowTitle("ValidationUtility")
-        self.setWindowIcon(QIcon("ValidationUtility.ico"))
+        self.setWindowIcon(QIcon(resolve_path("ValidationUtility.ico")))
         self.setMinimumSize(900, 600)
 
         self.selected_file = None

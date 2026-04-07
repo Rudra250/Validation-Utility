@@ -25,12 +25,13 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install Nuitka
-        run: pip install "nuitka[onefile]"
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
 
       - name: Build EXE
         run: |
-          python -m nuitka main.py --standalone --onefile --assume-yes-for-downloads --output-filename=ValidationUtility-$env:VERSION.exe --windows-icon-from-ico=ValidationUtility.ico
+          python -m nuitka main.py --standalone --onefile --assume-yes-for-downloads --output-filename=ValidationUtility-$env:VERSION.exe --windows-icon-from-ico=ValidationUtility.ico --include-data-files=ValidationUtility.ico=ValidationUtility.ico --windows-disable-console
 
       - name: Install Inno Setup
         run: choco install innosetup -y
@@ -60,8 +61,9 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install Nuitka
-        run: pip install nuitka
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
 
       - name: Build macOS App
         run: |
