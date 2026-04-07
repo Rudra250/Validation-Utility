@@ -27,7 +27,7 @@ jobs:
 
       - name: Build EXE
         run: |
-          python -m nuitka main.py --standalone --onefile --output-filename=ValidationUtility-$env:VERSION.exe --windows-icon-from-ico=ValidationUtility.ico
+          python -m nuitka main.py --standalone --onefile --assume-yes-for-downloads --output-filename=ValidationUtility-$env:VERSION.exe --windows-icon-from-ico=ValidationUtility.ico
 
       - name: Install Inno Setup
         run: choco install innosetup -y
