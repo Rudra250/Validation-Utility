@@ -5,6 +5,9 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write
+
 jobs:
   build-windows:
     runs-on: windows-latest
@@ -88,6 +91,6 @@ jobs:
         with:
           files: |
             windows-installer/*.exe
-            macos-app/*.app
+            macos-app/**/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
