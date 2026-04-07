@@ -23,7 +23,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install Nuitka
-        run: pip install nuitka
+        run: pip install "nuitka[onefile]"
 
       - name: Build EXE
         run: |
