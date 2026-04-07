@@ -31,7 +31,7 @@ jobs:
 
       - name: Build EXE
         run: |
-          python -m nuitka main.py --standalone --onefile --assume-yes-for-downloads --output-filename=ValidationUtility-$env:VERSION.exe --windows-icon-from-ico=ValidationUtility.ico --include-data-files=ValidationUtility.ico=ValidationUtility.ico --windows-disable-console
+          python -m nuitka main.py --standalone --onefile --assume-yes-for-downloads --output-filename=ValidationUtility-$env:VERSION.exe --windows-icon-from-ico=ValidationUtility.ico --include-data-files=ValidationUtility.ico=ValidationUtility.ico --windows-disable-console --enable-plugin=pyside6
 
       - name: Install Inno Setup
         run: choco install innosetup -y
@@ -69,7 +69,8 @@ jobs:
         run: |
           python -m nuitka main.py \
           --standalone \
-          --macos-create-app-bundle
+          --macos-create-app-bundle \
+          --enable-plugin=pyside6
 
       - name: Rename App
         run: mv main.app ValidationUtility-$VERSION.app
