@@ -16,9 +16,6 @@ SolidCompression=yes
 
 SetupIconFile=ValidationUtility.ico
 
-; Optional - keep only if this file exists
-LicenseFile=release\LICENSE
-
 PrivilegesRequired=admin
 
 [Files]
