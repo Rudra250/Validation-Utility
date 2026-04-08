@@ -6,3 +6,6 @@ dist/
 *.exe
 *.app
 Output/
+CLIENT_GUIDE.md
+ValidationUtility User Guide Manual (Windows).pdf
+APP_BYPASS_GUIDE.md
