@@ -5,12 +5,12 @@ A multi-platform utility for validating OpenAPI and AsyncAPI specifications.
 ## Installation
 
 ### Windows
-1.  Download the `ValidationUtility-Setup-vX.X.X.exe` installer from the [Releases](link-to-your-releases) page.
+1.  Download the `ValidationUtility-Setup-vX.X.X.exe` installer from the [Releases]([link-to-your-releases](https://github.com/Rudra250/Validation-Utility/releases)) page.
 2.  Run the installer and follow the on-screen instructions.
 3.  The application will be added to your Start Menu and Desktop.
 
 ### macOS
-1.  Download the `macos-app.zip` (or the `.app` bundle) from the [Releases](link-to-your-releases) page.
+1.  Download the `macos-app.zip` (or the `.app` bundle) from the [Releases]([link-to-your-releases](https://github.com/Rudra250/Validation-Utility/releases)) page.
 2.  Extract the ZIP file.
 3.  **Bypassing Security Warning**:
     -   Because the app is not signed with an Apple Developer certificate, macOS will likely block it with a "malware" or "unidentified developer" warning.
