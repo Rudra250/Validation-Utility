@@ -301,6 +301,11 @@ class RuleEngine:
             new_description = f"{base} date in yyyy-mm-dd format"
             self.validate_and_fix_datatype(field_name, field_body, current_path, "string", "date")
 
+        elif field_name.endswith("_time"):
+            base = build_field_base(field_name, "time")
+            new_description = f"{base} time in hh:mm:ss format"
+            self.validate_and_fix_datatype(field_name, field_body, current_path, "string", "time")
+
         # ------------------------------------------------
         # Step 2.5: Boolean Naming Rule
         # ------------------------------------------------
