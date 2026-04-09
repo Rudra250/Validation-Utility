@@ -205,10 +205,16 @@ class RuleEngine:
         current_type = field_body.get("type", "")
         current_format = field_body.get("format", "")
 
-        if current_type != expected_type or current_format != expected_format:
+        # Check if the field is actually an object (explicitly typed or has properties)
+        is_actually_object = current_type == "object" or "properties" in field_body
+        
+        # If it's an object, we preserve the 'object' type but still enforce the expected format
+        target_type = "object" if is_actually_object else expected_type
+
+        if current_type != target_type or current_format != expected_format:
             path_str = ".".join(str(p) for p in current_path)
             
-            expected_str = expected_type
+            expected_str = target_type
             if expected_format:
                 expected_str += f" + {expected_format}"
                 
@@ -240,7 +246,7 @@ class RuleEngine:
                         del field_body["format"]
                     self.changes.append(f"MANUAL FIX DATATYPE -> {field_name} (path: {path_str}) to {edit_val}")
                 else:
-                    field_body["type"] = expected_type
+                    field_body["type"] = target_type
                     if expected_format:
                         field_body["format"] = expected_format
                     elif "format" in field_body:
