@@ -1,6 +1,31 @@
 import yaml
 import re
 
+# ==========================================
+# YAML Boolean Patch (Fixes yes/no -> true/false)
+# ==========================================
+
+def patch_yaml_booleans():
+    """ 
+    Restricts PyYAML's boolean resolver to only true/false (YAML 1.2 style).
+    This prevents 'yes', 'no', 'on', 'off' from being auto-converted to booleans.
+    """
+    strict_bool_re = re.compile(r'^(?:true|True|TRUE|false|False|FALSE)$', re.X)
+    
+    for char in "yYnNoOtTfF":
+        if char in yaml.SafeLoader.yaml_implicit_resolvers:
+            resolvers = yaml.SafeLoader.yaml_implicit_resolvers[char]
+            new_resolvers = []
+            for tag, regexp in resolvers:
+                if tag == 'tag:yaml.org,2002:bool':
+                    new_resolvers.append((tag, strict_bool_re))
+                else:
+                    new_resolvers.append((tag, regexp))
+            yaml.SafeLoader.yaml_implicit_resolvers[char] = new_resolvers
+
+# Apply patch immediately
+patch_yaml_booleans()
+
 from api_governance import run_governance as run_api
 from event_governance import run_governance as run_event
 

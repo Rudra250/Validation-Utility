@@ -449,11 +449,17 @@ class UnifiedGovernanceApp(QWidget):
                     checkbox.setChecked(state)
 
     def handle_double_click(self, row, column):
-        if column == 3: # Expected column is 3
-            expected_text = self.table.item(row, column).text()
-            edit_widget = self.table.cellWidget(row, 5) # Edit column is 5
-            if edit_widget:
-                edit_widget.setText(expected_text)
+        if column == 3: # Expected column
+            item = self.table.item(row, column)
+            if item:
+                text = item.text()
+                self.update_edit_value(row, text)
+        
+        elif column == 4: # Found column
+            item = self.table.item(row, column)
+            if item:
+                text = item.text()
+                self.update_edit_value(row, text)
 
     def export_csv(self):
         if not self.violations_data:

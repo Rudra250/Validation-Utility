@@ -2,6 +2,7 @@ __pycache__/
 *.pyc
 build/
 dist/
+scratch
 *.spec
 *.exe
 *.app
